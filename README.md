@@ -18,4 +18,6 @@ the `ensure_installed` should contain the packages to be installed.
 ```bash
 #replaces cd with z
 z --cmd cd
+# Set the default nvim configuration
+ln -s nvim-lazyvim nvim
 ```

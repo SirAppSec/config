@@ -1,0 +1,22 @@
+- name: install xxh
+  community.general.homebrew:
+    name: xxh
+    state: present
+# This task installs packages using Homebrew on macOS
+- name: Install packages on macOS using Homebrew
+  community.general.homebrew:
+    name: "{{ item.name }}"
+    state: present
+  loop: "{{ lookup('file', playbook_dir + '/ensure_installed.yml') | from_yaml | json_query('packages') }}"
+  when: ansible_os_family == "Darwin"
+  delegate_to: localhost
+  run_once: true
+
+# This task installs packages using the generic package module on Linux
+- name: Install packages on Linux using the generic package module
+  ansible.builtin.package:
+    name: "{{ item.name }}"
+    state: present
+  loop: "{{ lookup('file', playbook_dir + '/ensure_installed.yml') | from_yaml | json_query('packages') }}"
+  when: ansible_os_family != "Darwin"
+  become: yes

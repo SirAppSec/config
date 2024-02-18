@@ -1,0 +1,8 @@
+packages:
+  - name: gh
+  - name: fzf
+  - name: ripgrep
+  - name: bash
+  - name: neovim
+  - name: zoxide
+  - name: xxh

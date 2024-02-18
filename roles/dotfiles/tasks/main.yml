@@ -1,0 +1,31 @@
+- name: Ensure .ssh directory exists
+  ansible.builtin.file:
+    path: "{{ ansible_env.HOME }}/.ssh"
+    state: directory
+    mode: '0700'
+
+- name: Copy SSH config to ~/.ssh
+  ansible.builtin.copy:
+    src: "{{ playbook_dir }}/dotfiles/.ssh/config.ssh"
+    dest: "{{ ansible_env.HOME }}/.ssh/config"
+    owner: "{{ ansible_env.USER }}"
+    mode: '0600'
+    decrypt: yes
+
+- name: Add SSH key to the agent and print its hash
+  shell: |
+    eval $(ssh-agent -s)
+    ssh-add ~/.ssh/config
+    ssh-add -l -E sha256
+  register: ssh_key_hash
+- debug:
+    msg: "{{ ssh_key_hash.stdout }}"
+
+- name: Install GNU Stow (if not already installed)
+  package:
+    name: stow
+    state: present
+
+- name: Symlink dotfiles using Stow from the repository root
+  command: stow --target={{ ansible_env.HOME }} --dir={{ playbook_dir }} --stow dotfiles
+

@@ -1,0 +1,19 @@
+- hosts: localhost
+  become: yes
+#  vars_prompt:
+#    - name: vault_password
+#      prompt: "Enter Vault password"
+#      private: yes
+  vars:
+    ansible_python_interpreter: "/opt/homebrew/bin/python3.12"
+  tasks:
+    - name: Install necessary packages
+      include_role:
+        name: packages
+    - name: Setup Oh My Zsh
+      include_role:
+        name: ohmyzsh
+    - name: Manage dotfiles with GNU Stow
+      include_role:
+        name: dotfiles
+

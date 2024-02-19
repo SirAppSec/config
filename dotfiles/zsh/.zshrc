@@ -1,9 +1,15 @@
+# Enable Powerlevel10k instant prompt. Should stay close to the top of ~/.zshrc.
+# Initialization code that may require console input (password prompts, [y/n]
+# confirmations, etc.) must go above this block; everything else may go below.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+# precomile completion system
+autoload -Uz compinit
+compinit -C
 # If you come from bash you might have to change your $PATH.
 # export PATH=$HOME/bin:/usr/local/bin:$PATH
 # 
-# CREATE A SYMLINK From File Project
-# ln -s ~/sirappsec-config/zshrc.conf ~/.zshrc 
-
 # Path to your oh-my-zsh installation.
 export ZSH="$HOME/.oh-my-zsh"
 
@@ -11,7 +17,7 @@ export ZSH="$HOME/.oh-my-zsh"
 # load a random theme each time oh-my-zsh is loaded, in which case,
 # to know which specific one was loaded, run: echo $RANDOM_THEME
 # See https://github.com/ohmyzsh/ohmyzsh/wiki/Themes
-ZSH_THEME="robbyrussell"
+ZSH_THEME="powerlevel10k/powerlevel10k"
 
 # Set list of themes to pick from when loading at random
 # Setting this variable when ZSH_THEME=random will cause zsh to load
@@ -67,15 +73,17 @@ zstyle ':omz:update' mode auto      # update automatically without asking
 
 # Would you like to use another custom folder than $ZSH/custom?
 # ZSH_CUSTOM=/path/to/new-custom-folder
-
+export NVM_LAZY_LOAD=true
+DISABLE_UPDATE_PROMPT="true"
 # Which plugins would you like to load?
 # Standard plugins can be found in $ZSH/plugins/
 # Custom plugins may be added to $ZSH_CUSTOM/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git)
+plugins=(git zsh-nvm zsh-completions zsh-autosuggestions zsh-syntax-highlighting)
 # git clone https://github.com/jeffreytse/zsh-vi-mode $ZSH_CUSTOM/plugins/zsh-vi-mode
 # plugins+=(zsh-vi-mode)
+fpath+=${ZSH_CUSTOM:-${ZSH:-~/.oh-my-zsh}/custom}/plugins/zsh-completions/src
 source $ZSH/oh-my-zsh.sh
 
 # User configuration
@@ -105,6 +113,10 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 alias ll="ls -la"
 
+if command -v z >/dev/null 2>&1; then
+    alias cd='z'
+fi
+
 # Configuration for Python, PIP, OpenSSL to trust the PayPal Proxy Certificates
 export REQUESTS_CA_BUNDLE='/usr/local/etc/openssl/certs/combined_cacerts.pem'
 export SSL_CERT_FILE='/usr/local/etc/openssl/certs/combined_cacerts.pem'
@@ -112,13 +124,13 @@ export SSL_CERT_FILE='/usr/local/etc/openssl/certs/combined_cacerts.pem'
 # Configuration to load nvm - node version manager
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+#Custom QoL Additions
 
+export NODE_PATH=$NODE_PATH:`npm root -g`
 # Configuration for node to trust the PayPal Proxy Certificates
 export NODE_EXTRA_CA_CERTS='/usr/local/etc/openssl/certs/paypal_proxy_cacerts.pem'
 
 
-#Custom QoL Additions
-export NODE_PATH=$NODE_PATH:`npm root -g`
 #export HOMEBREW_CURLRC=1
 ##certs
 export PATH="/usr/local/bin:$PATH"
@@ -144,3 +156,9 @@ export PATH="$HOME/.rd/bin:$PATH"
 # Created by `pipx` on 2024-01-22 13:48:10
 export PATH="$PATH:$HOME/.local/bin"
 
+eval "$(zoxide init zsh --cmd cd)"
+
+# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh.
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh

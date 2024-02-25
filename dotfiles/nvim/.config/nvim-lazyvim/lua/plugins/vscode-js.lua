@@ -47,7 +47,9 @@ return {
     },
     config = function()
       require("dap-vscode-js").setup({
-        debugger_path = vim.fn.stdpath("data") .. "/lazy/vscode-js-debug",
+        debugger_path = "/Users/asrour/learn/vscode-debugger/vscode-js-debug",
+        node_path = "node",
+        debugger_cmd = { "js-debug-dapter" },
         adapters = { "pwa-node", "pwa-chrome", "pwa-msedge", "node-terminal", "pwa-extensionHost" },
       })
 
